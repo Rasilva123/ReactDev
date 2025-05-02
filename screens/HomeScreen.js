@@ -1,14 +1,15 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { useTheme } from '../theme/ThemeContext'; // 👈 Importa o contexto do tema
+import { Feather } from '@expo/vector-icons';
+import { useTheme } from '../theme/ThemeContext';
 
 export default function HomeScreen({ navigation }) {
-  const { theme, toggleTheme, darkMode } = useTheme(); // 👈 Usa o contexto
+  const { theme, toggleTheme, darkMode } = useTheme();
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <Text style={[styles.title, { color: theme.colors.text }]}>
-        Bem-vindo ao ReactDev
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>      
+      <Text style={[styles.title, { color: theme.colors.text }]}>        
+        Bem-vindo ao ReactDev      
       </Text>
 
       <TouchableOpacity
@@ -25,14 +26,22 @@ export default function HomeScreen({ navigation }) {
         <Text style={styles.buttonText}>O que é React Native?</Text>
       </TouchableOpacity>
 
-      {/* Botão de alternância de tema */}
       <TouchableOpacity
-        style={[styles.button, { backgroundColor: theme.colors.primaryLight }]}
+        style={[styles.button, { backgroundColor: theme.colors.secondary }]}
+        onPress={() => navigation.navigate('Lições')}
+      >
+        <Text style={styles.buttonText}>Ver Lições</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[styles.floatingButton, { backgroundColor: theme.colors.primaryLight }]}
         onPress={toggleTheme}
       >
-        <Text style={[styles.buttonText, { color: darkMode ? '#000' : '#000' }]}>
-          Alternar Tema
-        </Text>
+        <Feather
+          name={darkMode ? 'sun' : 'moon'}
+          size={24}
+          color={theme.colors.background}
+        />
       </TouchableOpacity>
     </View>
   );
@@ -41,6 +50,7 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    position: 'relative',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
@@ -62,5 +72,20 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 18,
     color: '#fff',
+  },
+  floatingButton: {
+    position: 'absolute',
+    bottom: 24,
+    right: 24,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
   },
 });
