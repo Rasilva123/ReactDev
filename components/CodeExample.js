@@ -1,64 +1,106 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
 import styled from 'styled-components/native';
+import SyntaxHighlighter from 'react-native-syntax-highlighter';
+import { dracula } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
-const Wrapper = styled.View`
-    flex: 1;
-    padding: 16px;
-    background-color: ${({ theme }) => theme.background};
-`;
-
-const Title = styled.Text`
+const PageTitle = styled.Text`
     font-size: 20px;
     font-weight: bold;
     color: ${({ theme }) => theme.text};
-    margin-bottom: 8px;
+    margin: 16px;
 `;
 
 const Description = styled.Text`
     font-size: 14px;
-    color: ${({ theme }) => theme.textSecondary};
-    margin-bottom: 16px;
+    color: ${({ theme }) => theme.text};
+    margin-horizontal: 16px;
+    margin-bottom: 8px;
 `;
 
 const ExampleContainer = styled.View`
-    padding: 12px;
-    border-width: 1px;
-    border-color: ${({ theme }) => theme.border};
-    border-radius: 8px;
-    margin-bottom: 16px;
+    background-color: #111;
+    padding: 8px;
+    margin-horizontal: 16px;
+    margin-bottom: 8px;
+    border-radius: 4px;
 `;
 
-const CodeContainer = styled.View`
-    background-color: #2d2d2d;
-    border-radius: 8px;
-    padding: 12px;
+const Box = styled.View`
+    margin: 16px;
+    border: 1px solid #333;
+    background-color: #282a36;
+    border-radius: 4px;
+    overflow: hidden;
 `;
 
-const CodeText = styled.Text`
+const Header = styled.View`
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #21222c;
+    padding: 4px 8px;
+`;
+
+const Title = styled.Text`
+    color: #f8f8f2;
     font-family: 'Courier New';
-    color: #e5e5e5;
+    font-size: 14px;
 `;
 
-export default function CodeExample({ title, description, ExampleComponent, codeSnippet }) {
-  return (
-    <Wrapper>
-        {title && <Title>{title}</Title>}
-        {description && <Description>{description}</Description>}
+const Controls = styled.View`
+    flex-direction: row;
+`;
 
-        {ExampleComponent && (
-            <ExampleContainer>
-            <ExampleComponent />
-            </ExampleContainer>
-        )}
+const Control = styled.View`
+    width: 12px;
+    height: 12px;
+    border-radius: 6px;
+    background-color: ${(p) => p.color};
+    margin-left: 4px;
+`;
 
-        {codeSnippet && (
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <CodeContainer>
-                <CodeText>{codeSnippet}</CodeText>
-            </CodeContainer>
-            </ScrollView>
-        )}
-    </Wrapper>
-  );
+const CodeScroll = styled(ScrollView).attrs({
+    horizontal: true,
+    showsHorizontalScrollIndicator: false,
+})`
+    padding: 8px;
+`;
+
+export default function CodeExample({title = '', description = '', ExampleComponent = null, code = '', language = 'javascript',}) {
+    return (
+        <>
+            {title.length > 0 && <PageTitle>{title}</PageTitle>}
+            {description.length > 0 && <Description>{description}</Description>}
+        
+            {ExampleComponent && (
+                <ExampleContainer>
+                    <ExampleComponent />
+                </ExampleContainer>
+            )}
+        
+            <Box>
+                <Header>
+                    <Title>Code</Title>
+                    <Controls>
+                        <Control color="#ff5555" />
+                        <Control color="#f1fa8c" />
+                        <Control color="#50fa7b" />
+                    </Controls>
+                </Header>
+        
+                <CodeScroll>
+                    <SyntaxHighlighter
+                        language={language}
+                        style={dracula}
+                        highlighter="hljs"
+                        customStyle={{ backgroundColor: 'transparent', padding: 0, margin: 0 }}
+                        codeTagProps={{ style: { fontFamily: 'Courier New', fontSize: 14 } }}
+                    >
+                        {code}
+                    </SyntaxHighlighter>
+                </CodeScroll>
+            </Box>
+        </>
+    );
 }
